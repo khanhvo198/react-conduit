@@ -6,6 +6,8 @@ import { register } from "../services/auth.service"
 import { RegisterValidationSchema } from "../shared/data-access/zod-schema"
 import { ErrorList } from "../shared/ui/ErrorList"
 import { NavLink, useNavigate } from "react-router-dom"
+import { CONDUIT_TOKEN, CONDUIT_USER } from "../shared/constants"
+import { useAuthStore } from "../shared/data-access/auth.store"
 
 const initialValues = {
   username: "",
@@ -15,9 +17,11 @@ const initialValues = {
 
 export const Register = () => {
   const navigate = useNavigate()
+  const { setAuthState } = useAuthStore()
   const { isPending, mutate, isError, error } = useMutation({
     mutationFn: register,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setAuthState(data.user, true)
       navigate("/")
     }
   })

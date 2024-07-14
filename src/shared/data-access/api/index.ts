@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { BASE_URL, CONDUIT_TOKEN } from "../../constants";
+import { useAuthStore } from "../auth.store";
 
 
 export const conduitApi = axios.create();
@@ -7,6 +8,7 @@ export const conduitApi = axios.create();
 conduitApi.interceptors.request.use((request: AxiosRequestConfig) => {
   const token = localStorage.getItem(CONDUIT_TOKEN)
   request.baseURL = BASE_URL
+  console.log(token)
   if (token) {
     if (request.headers) {
       request.headers.Authorization = `Bearer ${token}`

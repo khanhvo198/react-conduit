@@ -8,6 +8,7 @@ import { Layout } from "./components/layout.tsx";
 import { Home } from "./pages/home.tsx";
 import { Login } from "./pages/login.tsx";
 import { Register } from "./pages/register.tsx";
+import { Settings } from "./pages/settings.tsx";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,10 @@ const routes = createBrowserRouter([
           {
             path: "register",
             element: <Register />
+          },
+          {
+            path: "settings",
+            element: <Settings />
           }
         ]
       }

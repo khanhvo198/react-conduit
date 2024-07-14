@@ -5,7 +5,8 @@ import { CONDUIT_TOKEN, CONDUIT_USER } from "../constants";
 interface AuthState {
   user: User | undefined;
   isAuthenticated: boolean;
-  setUser: (user: User | undefined, isAuthenticated: boolean) => void
+  setAuthState: (user: User | undefined, isAuthenticated: boolean) => void,
+  setUser: (user: User) => void
 }
 
 const token = localStorage.getItem(CONDUIT_TOKEN)
@@ -14,5 +15,15 @@ const user = JSON.parse(localStorage.getItem(CONDUIT_USER) || "{}")
 export const useAuthStore = create<AuthState>((set) => ({
   user: user,
   isAuthenticated: !!token,
-  setUser: (user: User | undefined, isAuthenticated: boolean) => set(() => ({ user, isAuthenticated }))
+  setAuthState: (user: User | undefined, isAuthenticated: boolean) => set(() => {
+    if (user) {
+      localStorage.setItem(CONDUIT_TOKEN, user.token)
+      localStorage.setItem(CONDUIT_USER, JSON.stringify(user))
+    } else {
+      localStorage.removeItem(CONDUIT_TOKEN)
+      localStorage.removeItem(CONDUIT_USER)
+    }
+    return { user, isAuthenticated }
+  }),
+  setUser: (user: User) => set(() => ({ user }))
 }))

@@ -8,6 +8,7 @@ import { User, UserLoginDTO } from "../shared/data-access/api/models/user"
 import { LoginValidationSchema } from "../shared/data-access/zod-schema"
 import { ErrorList } from "../shared/ui/ErrorList"
 import { useAuthStore } from "../shared/data-access/auth.store"
+import { CONDUIT_TOKEN, CONDUIT_USER } from "../shared/constants"
 
 const initialValues: UserLoginDTO = {
   email: "",
@@ -21,7 +22,7 @@ export const Login = () => {
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: login,
     onSuccess: (data: { user: User }) => {
-      useAuth.setUser(data.user, true)
+      useAuth.setAuthState(data.user, true)
       navigate("/")
     }
   })

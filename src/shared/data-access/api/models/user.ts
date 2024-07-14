@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { LoginValidationSchema, RegisterValidationSchema } from "../../zod-schema";
+import { LoginValidationSchema, RegisterValidationSchema, UpdateUserValidationSchema } from "../../zod-schema";
 
 export interface User {
   bio: string;
@@ -12,3 +12,4 @@ export interface User {
 
 export type UserLoginDTO = z.infer<typeof LoginValidationSchema>
 export type UserRegisterDTO = z.infer<typeof RegisterValidationSchema>
+export type UpdateUserDTO = z.infer<typeof UpdateUserValidationSchema>
