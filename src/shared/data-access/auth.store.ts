@@ -16,6 +16,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: user,
   isAuthenticated: !!token,
   setAuthState: (user: User | undefined, isAuthenticated: boolean) => set(() => {
+    console.log(user)
     if (user) {
       localStorage.setItem(CONDUIT_TOKEN, user.token)
       localStorage.setItem(CONDUIT_USER, JSON.stringify(user))
@@ -25,5 +26,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
     return { user, isAuthenticated }
   }),
-  setUser: (user: User) => set(() => ({ user }))
+  setUser: (user: User) => set(() => {
+    localStorage.setItem(CONDUIT_USER, JSON.stringify(user))
+    return { user }
+  })
 }))

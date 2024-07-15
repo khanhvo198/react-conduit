@@ -23,10 +23,12 @@ export const Settings = () => {
   const { isPending, mutate, isError, error } = useMutation({
     mutationFn: updateUser,
     onSuccess: (data) => {
+      console.log(data.user)
       setUser(data.user)
       navigate("/")
     }
   })
+  console.log(error)
 
   const handleLogout = () => {
     setAuthState(undefined, false)
@@ -40,7 +42,7 @@ export const Settings = () => {
           <div className="col-md-6 offset-md-3 col-xs-12">
             <h1 className="text-xs-center">Your Settings</h1>
 
-            {isError && <ErrorList errors={((error as AxiosError).response?.data as any)?.errors} />}
+            {isError && ((error as AxiosError).response?.data as any)?.errors?.length > 0 && <ErrorList errors={((error as AxiosError).response?.data as any)?.errors} />}
             <Formik
               initialValues={initialValues}
               onSubmit={(user) => mutate({ user })}
