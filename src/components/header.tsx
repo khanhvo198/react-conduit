@@ -40,7 +40,7 @@ const UserHeader = ({ user }: { user: User | undefined }) => {
             <NavLink className={({ isActive }) => isActive ? 'active nav-link' : 'nav-link'} to="/settings"> <i className="ion-gear-a"></i>&nbsp;Settings </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className={({ isActive }) => isActive ? 'active nav-link' : 'nav-link'} to="/profile/eric-simons">
+            <NavLink className={({ isActive }) => isActive ? 'active nav-link' : 'nav-link'} to={`/profile/${user?.username}`}>
               <img src={user?.image} className="user-pic" />
               {user?.username}
             </NavLink>

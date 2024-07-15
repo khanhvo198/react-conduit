@@ -9,6 +9,7 @@ import { Home } from "./pages/home.tsx";
 import { Login } from "./pages/login.tsx";
 import { Register } from "./pages/register.tsx";
 import { Settings } from "./pages/settings.tsx";
+import { Profile } from "./pages/profile.tsx";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,10 @@ const routes = createBrowserRouter([
           {
             path: "settings",
             element: <Settings />
+          },
+          {
+            path: "profile/:username",
+            element: <Profile />
           }
         ]
       }

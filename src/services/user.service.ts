@@ -11,3 +11,8 @@ export const updateUser = async (user: { user: UpdateUserDTO }): Promise<{ user:
   const response = await conduitApi.put("/user", user);
   return response.data
 }
+
+export const getProfile = async (username: string): Promise<{ profile: User }> => {
+  const response = await conduitApi.get(`/profiles/${username}`);
+  return response.data
+}
