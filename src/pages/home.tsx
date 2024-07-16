@@ -1,5 +1,55 @@
-export const Home = () => {
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
+import { useMemo, useState } from "react"
+import { getArticles, getFeeds } from "../services/article.service"
+import { ArticlesList } from "../components/articles-list"
+import { Pagination } from "../components/pagination"
 
+const YOUR_FEED: string = "YOUR_FEED"
+const GLOBAL_FEED: string = "GLOBAL_FEED"
+
+type Tab = "YOUR_FEED" | "GLOBAL_FEED"
+
+const getQueryOptions = (tab: Tab, currentPage: number) => {
+  const offset = (currentPage - 1) * 10
+  if (tab === YOUR_FEED) {
+    return {
+      queryKey: ["articles_feed", tab, currentPage],
+      queryFn: () => getFeeds(offset)
+    }
+  } else {
+    return {
+      queryKey: ["articles_global", tab, currentPage],
+      queryFn: () => getArticles(offset)
+    }
+  }
+}
+
+
+export const Home = () => {
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [total, setTotal] = useState<number>(0)
+  const [tab, setTab] = useState<Tab>("YOUR_FEED")
+
+  const queryOptions = getQueryOptions(tab, currentPage)
+  const { isPending, data, isSuccess } = useQuery(queryOptions)
+
+
+  const totalResults = data?.articlesCount ? data.articlesCount : 0
+  useMemo(() => {
+    const totalPage = Math.ceil(totalResults / 10)
+    setTotal(totalPage)
+  }, [totalResults])
+
+  console.log(totalResults)
+
+
+  const handleOnPageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  const handleOnClickTab = (tab: Tab) => {
+    setTab(tab)
+  }
   return (
     <div className="home-page">
       <div className="banner">
@@ -15,66 +65,25 @@ export const Home = () => {
             <div className="feed-toggle">
               <ul className="nav nav-pills outline-active">
                 <li className="nav-item">
-                  <a className="nav-link" href="">Your Feed</a>
+                  <a className={tab === YOUR_FEED ? "nav-link active" : "nav-link"} onClick={() => handleOnClickTab(YOUR_FEED as Tab)}>Your Feed</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link active" href="">Global Feed</a>
+                  <a className={tab === GLOBAL_FEED ? "nav-link active" : "nav-link"} onClick={() => handleOnClickTab(GLOBAL_FEED as Tab)}>Global Feed</a>
                 </li>
               </ul>
             </div>
+            {
+              isPending && <div className="article-preview">Loading...</div>
+            }
+            {
+              isSuccess && data.articles.length === 0 && <div className="article-preview"> No article heres</div>
+            }
+            {
+              isSuccess && <ArticlesList articles={data.articles} />
+            }
 
-            <div className="article-preview">
-              <div className="article-meta">
-                <a href="/profile/eric-simons"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
-                <div className="info">
-                  <a href="/profile/eric-simons" className="author">Eric Simons</a>
-                  <span className="date">January 20th</span>
-                </div>
-                <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i className="ion-heart"></i> 29
-                </button>
-              </div>
-              <a href="/article/how-to-build-webapps-that-scale" className="preview-link">
-                <h1>How to build webapps that scale</h1>
-                <p>This is the description for the post.</p>
-                <span>Read more...</span>
-                <ul className="tag-list">
-                  <li className="tag-default tag-pill tag-outline">realworld</li>
-                  <li className="tag-default tag-pill tag-outline">implementations</li>
-                </ul>
-              </a>
-            </div>
+            <Pagination totalPage={total} currentPage={currentPage} onPageChange={handleOnPageChange} />
 
-            <div className="article-preview">
-              <div className="article-meta">
-                <a href="/profile/albert-pai"><img src="http://i.imgur.com/N4VcUeJ.jpg" /></a>
-                <div className="info">
-                  <a href="/profile/albert-pai" className="author">Albert Pai</a>
-                  <span className="date">January 20th</span>
-                </div>
-                <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i className="ion-heart"></i> 32
-                </button>
-              </div>
-              <a href="/article/the-song-you" className="preview-link">
-                <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-                <p>This is the description for the post.</p>
-                <span>Read more...</span>
-                <ul className="tag-list">
-                  <li className="tag-default tag-pill tag-outline">realworld</li>
-                  <li className="tag-default tag-pill tag-outline">implementations</li>
-                </ul>
-              </a>
-            </div>
-
-            <ul className="pagination">
-              <li className="page-item active">
-                <a className="page-link" href="">1</a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="">2</a>
-              </li>
-            </ul>
           </div>
 
           <div className="col-md-3">
