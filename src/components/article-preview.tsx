@@ -1,11 +1,32 @@
+import { useMutation } from "@tanstack/react-query"
 import { Article } from "../shared/data-access/api/models/article"
 import { TagList } from "./tag-list"
+import { favoriteArticle, unfavoriteArticle } from "../services/article.service"
 
 interface ArticleProps {
   article: Article
 }
 
 export const ArticlePreview = ({ article }: ArticleProps) => {
+  const { mutate: favorite } = useMutation({
+    mutationKey: ["favorited"], mutationFn: favoriteArticle, onSuccess: (data) => handleOnSuccess(data)
+  })
+  const { mutate: unfavorite } = useMutation({
+    mutationKey: ["unfavorite"], mutationFn: unfavoriteArticle, onSuccess: (data) => handleOnSuccess(data)
+  })
+
+  const handleOnSuccess = (data: { article: Article }) => {
+    article.favorited = data.article.favorited;
+    article.favoritesCount = data.article.favoritesCount
+  }
+
+  const handleOnClick = () => {
+    if (!article.favorited) {
+      favorite(article.slug)
+    } else {
+      unfavorite(article.slug)
+    }
+  }
 
   return (
     <div className="article-preview">
@@ -15,7 +36,7 @@ export const ArticlePreview = ({ article }: ArticleProps) => {
           <a href={article.author.username} className="author">{article.author.username}</a>
           <span className="date">{article.createdAt}</span>
         </div>
-        <button className="btn btn-outline-primary btn-sm pull-xs-right">
+        <button onClick={handleOnClick} className={`btn ${article.favorited ? "btn-primary" : "btn-outline-primary"} btn-sm pull-xs-right`}>
           <i className="ion-heart"></i> {article.favoritesCount}
         </button>
       </div>

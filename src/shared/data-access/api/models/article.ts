@@ -8,9 +8,12 @@ export interface Article {
   tagList: string[];
   createdAt: string;
   updatedAt: string;
-  favorited: string;
+  favorited: boolean;
   favoritesCount: number;
-  author: User
+  author: User;
+  id: number;
+  authorId: number;
+  favoritedBy: User[]
 }
 
 export interface ArticlesDTO {
