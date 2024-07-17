@@ -1,19 +1,36 @@
 import { conduitApi } from "../shared/data-access/api";
 import { Article, ArticlesDTO } from "../shared/data-access/api/models/article";
 
-export const getArticles = async (offset = 0): Promise<ArticlesDTO> => {
+interface paramsArticle {
+  offset?: number;
+  limit?: number;
+  author?: string;
+  favorited?: string;
+  tag?: string
+}
+
+interface paramsFeed {
+  offset?: number;
+  limit?: number;
+}
+
+export const getArticles = async ({ offset = 0, limit, author, favorited }: paramsArticle): Promise<ArticlesDTO> => {
   const response = await conduitApi.get("/articles", {
     params: {
-      offset
+      offset,
+      limit,
+      author,
+      favorited
     }
   })
   return response.data
 }
 
-export const getFeeds = async (offset = 0): Promise<ArticlesDTO> => {
+export const getFeeds = async ({ offset = 0, limit }: paramsFeed): Promise<ArticlesDTO> => {
   const response = await conduitApi.get("/articles/feed", {
     params: {
-      offset
+      offset,
+      limit
     }
   })
   return response.data

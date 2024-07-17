@@ -8,7 +8,6 @@ export const conduitApi = axios.create();
 conduitApi.interceptors.request.use((request: AxiosRequestConfig) => {
   const token = localStorage.getItem(CONDUIT_TOKEN)
   request.baseURL = BASE_URL
-  console.log(token)
   if (token) {
     if (request.headers) {
       request.headers.Authorization = `Bearer ${token}`
