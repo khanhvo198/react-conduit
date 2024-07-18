@@ -17,12 +17,12 @@ export const getProfile = async (username: string): Promise<{ profile: Profile }
   return response.data
 }
 
-export const followProfile = async (username: string): Promise<{ profile: Profile }> => {
+export const followProfile = async (username: string): Promise<{ profile: User }> => {
   const response = await conduitApi.post(`/profiles/${username}/follow`);
   return response.data
 }
 
-export const unfollowProfile = async (username: string): Promise<{ profile: Profile }> => {
+export const unfollowProfile = async (username: string): Promise<{ profile: User }> => {
   const response = await conduitApi.delete(`/profiles/${username}/follow`);
   return response.data
 }
