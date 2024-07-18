@@ -9,6 +9,12 @@ export interface User {
   email: string;
 }
 
+export interface Profile {
+  bio: string;
+  image: string;
+  username: string;
+  following: boolean
+}
 
 export type UserLoginDTO = z.infer<typeof LoginValidationSchema>
 export type UserRegisterDTO = z.infer<typeof RegisterValidationSchema>

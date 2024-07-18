@@ -33,7 +33,7 @@ export const ArticlePreview = ({ article }: ArticleProps) => {
       <div className="article-meta">
         <a href={article.author.username}><img src={article.author.image} /></a>
         <div className="info">
-          <a href={article.author.username} className="author">{article.author.username}</a>
+          <a href={`/profile/${article.author.username}`} className="author">{article.author.username}</a>
           <span className="date">{article.createdAt}</span>
         </div>
         <button onClick={handleOnClick} className={`btn ${article.favorited ? "btn-primary" : "btn-outline-primary"} btn-sm pull-xs-right`}>

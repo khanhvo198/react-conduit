@@ -1,23 +1,19 @@
 import { useQuery } from "@tanstack/react-query"
-import { useParams } from "react-router-dom"
-import { getProfile } from "../services/user.service"
-import { FeedToggle } from "../components/feed-toggle"
 import { useMemo, useState } from "react"
-import { MY_ARTICLES } from "../shared/constants"
-import { getArticles } from "../services/article.service"
-import { ProfilePreview } from "../components/profile-preview"
+import { useParams } from "react-router-dom"
 import { ArticlesList } from "../components/articles-list"
+import { FeedToggle } from "../components/feed-toggle"
 import { Pagination } from "../components/pagination"
+import { ProfilePreview } from "../components/profile-preview"
+import { getArticles } from "../services/article.service"
+import { getProfile } from "../services/user.service"
+import { useAuthStore } from "../shared/data-access/auth.store"
 
-const tabsList = [
-  "My Articles",
-  "Favorited Articles"
-]
 
 
 const getQueryOptions = (tab: string, currentPage: number, username: string) => {
   const offset = (currentPage - 1) * 10
-  if (tab === MY_ARTICLES) {
+  if (tab === `${username}'s Articles`) {
     return {
       queryKey: ["my_articles", tab, currentPage, username],
       queryFn: () => getArticles({ offset, author: username })
@@ -32,7 +28,8 @@ const getQueryOptions = (tab: string, currentPage: number, username: string) => 
 
 export const Profile = () => {
   const { username } = useParams()
-  const [tab, setTab] = useState("My Articles")
+  const { user } = useAuthStore();
+  const [tab, setTab] = useState<string>(`${username}'s Articles`)
   const [total, setTotal] = useState<number>(0)
 
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -42,10 +39,12 @@ export const Profile = () => {
 
   const isPending = isPendingProfile && isPendingArticles
 
-  console.log(dataArticles)
+  const isOwner = dataProfile?.profile.username === user?.username
 
-  const isOwner = dataProfile?.profile.username === username
-
+  const tabsList = [
+    `${username}'s Articles`,
+    "Favorited Articles"
+  ]
   const handleOnTabChange = (tab: string) => {
     setTab(tab)
   }
@@ -66,6 +65,7 @@ export const Profile = () => {
     return <div>Loading...</div>
   }
 
+  console.log(dataArticles)
   return (
     <div className="profile-page">
       {isPendingProfile ? <div>Loading...</div> : <ProfilePreview profile={dataProfile?.profile!} isOwner={isOwner} />}
@@ -83,8 +83,6 @@ export const Profile = () => {
             {
               isSuccess && <ArticlesList articles={dataArticles.articles} />
             }
-
-
             <Pagination totalPage={total} currentPage={currentPage} onPageChange={handleOnPageChange} />
           </div>
         </div>
