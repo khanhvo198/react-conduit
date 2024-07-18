@@ -10,6 +10,7 @@ import { Login } from "./pages/login.tsx";
 import { Register } from "./pages/register.tsx";
 import { Settings } from "./pages/settings.tsx";
 import { Profile } from "./pages/profile.tsx";
+import { Article } from "./pages/article.tsx";
 
 const queryClient = new QueryClient();
 
@@ -41,7 +42,12 @@ const routes = createBrowserRouter([
           {
             path: "profile/:username",
             element: <Profile />
+          },
+          {
+            path: "article/:slug",
+            element: <Article />
           }
+
         ]
       }
     ]

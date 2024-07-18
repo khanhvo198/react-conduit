@@ -15,7 +15,7 @@ const getQueryOptions = (tab: string, currentPage: number, username: string) => 
   const offset = (currentPage - 1) * 10
   if (tab === `${username}'s Articles`) {
     return {
-      queryKey: ["my_articles", tab, currentPage, username],
+      queryKey: [`${username}'s Articles`, tab, currentPage, username],
       queryFn: () => getArticles({ offset, author: username })
     }
   } else {
@@ -65,7 +65,6 @@ export const Profile = () => {
     return <div>Loading...</div>
   }
 
-  console.log(dataArticles)
   return (
     <div className="profile-page">
       {isPendingProfile ? <div>Loading...</div> : <ProfilePreview profile={dataProfile?.profile!} isOwner={isOwner} />}

@@ -47,3 +47,8 @@ export const unfavoriteArticle = async (slug: string): Promise<{ article: Articl
   return response.data
 }
 
+
+export const getArticle = async (slug: string): Promise<{ article: Article }> => {
+  const response = await conduitApi.get(`articles/${slug}`)
+  return response.data
+}
