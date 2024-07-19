@@ -1,24 +1,99 @@
 import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { getArticle } from "../services/article.service"
-import { TagList } from "../components/tag-list"
+import { ArticleActions } from "../components/article-action"
 import { ArticleMeta } from "../components/article-meta"
+import { TagList } from "../components/tag-list"
+import { getArticle } from "../services/article.service"
+import { Article } from "../shared/data-access/api/models/article"
+import { User } from "../shared/data-access/api/models/user"
+import { CommentsList } from "../components/comments-list"
+import { getComments } from "../services/comment.service"
+import { Comment } from "../shared/data-access/api/models/comment"
+import { CommentForm } from "../components/comment-form"
 
-export const Article = () => {
 
+const initArticle = {
+  slug: "",
+  title: "",
+  description: "",
+  body: "",
+  tagList: [],
+  createdAt: "",
+  updatedAt: "",
+  favorited: false,
+  favoritesCount: 0,
+  author: {
+    bio: "",
+    image: "",
+    username: "",
+    following: false,
+    token: "",
+    email: ""
+  },
+  id: 0,
+  authorId: 0,
+  favoritedBy: []
+}
+
+export const ArticlePage = () => {
   const { slug } = useParams()
+  const [currentArticle, setCurrentArticle] = useState<Article>(initArticle)
+  const [currentComments, setCurrentComments] = useState<Comment[]>([])
+  const { isPending: isPendingArticle, isSuccess: isSuccessArticle, data: dataArticle } = useQuery({
+    queryKey: ["article"], queryFn: () => getArticle(slug!)
+  })
 
-  const { isPending, data } = useQuery({ queryKey: ["article"], queryFn: () => getArticle(slug!) })
+  const { isPending: isPendingComments, isSuccess: isSuccessComments, data: dataComments } = useQuery({
+    queryKey: ["comments"], queryFn: () => getComments(slug!)
+  })
 
-  console.log(data)
-  if (isPending) return <div>Loading...</div>
+  useEffect(() => {
+    if (isSuccessArticle) {
+      setCurrentArticle({ ...dataArticle.article })
+    }
+  }, [isSuccessArticle])
+
+  useEffect(() => {
+    if (isSuccessComments) {
+      setCurrentComments([...dataComments.comments])
+    }
+  }, [isSuccessComments])
+
+
+
+  const handleToggleFollow = (profile: User) => {
+    setCurrentArticle({
+      ...currentArticle,
+      author: {
+        ...profile
+      }
+    })
+  }
+
+  const handleToggleFavorite = (article: Article) => {
+    setCurrentArticle({
+      ...article
+    })
+  }
+
+  const handleCreateComment = (comment: Comment) => {
+    currentComments.push(comment)
+    setCurrentComments([...currentComments])
+  }
+
+  if (isPendingArticle) return <div>Loading...</div>
+
 
   return (
     <div className="article-page">
       <div className="banner">
         <div className="container">
-          <h1>{data?.article.title}</h1>
-          <ArticleMeta article={data?.article!} />
+          <h1>{currentArticle.title}</h1>
+          <div className="article-meta">
+            <ArticleMeta article={currentArticle} />
+            <ArticleActions article={currentArticle} toggleFavorite={handleToggleFavorite} toggleFollow={handleToggleFollow} />
+          </div>
         </div>
       </div>
 
@@ -26,9 +101,9 @@ export const Article = () => {
         <div className="row article-content">
           <div className="col-md-12">
             <p>
-              {data?.article.body}
+              {currentArticle.body}
             </p>
-            <TagList tagList={data?.article.tagList!} />
+            <TagList tagList={currentArticle.tagList} />
           </div>
         </div>
 
@@ -36,78 +111,17 @@ export const Article = () => {
 
         <div className="article-actions">
           <div className="article-meta">
-            <a href="profile.html"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
-            <div className="info">
-              <a href="" className="author">Eric Simons</a>
-              <span className="date">January 20th</span>
-            </div>
-
-            <button className="btn btn-sm btn-outline-secondary">
-              <i className="ion-plus-round"></i>
-              &nbsp; Follow Eric Simons
-            </button>
-            &nbsp;
-            <button className="btn btn-sm btn-outline-primary">
-              <i className="ion-heart"></i>
-              &nbsp; Favorite Article <span className="counter">(29)</span>
-            </button>
-            <button className="btn btn-sm btn-outline-secondary">
-              <i className="ion-edit"></i> Edit Article
-            </button>
-            <button className="btn btn-sm btn-outline-danger">
-              <i className="ion-trash-a"></i> Delete Article
-            </button>
+            <ArticleMeta article={currentArticle} />
+            <ArticleActions article={currentArticle} toggleFavorite={handleToggleFavorite} toggleFollow={handleToggleFollow} />
           </div>
         </div>
-
         <div className="row">
           <div className="col-xs-12 col-md-8 offset-md-2">
-            <form className="card comment-form">
-              <div className="card-block">
-                <textarea className="form-control" placeholder="Write a comment..." rows={3}></textarea>
-              </div>
-              <div className="card-footer">
-                <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-                <button className="btn btn-sm btn-primary">Post Comment</button>
-              </div>
-            </form>
-
-            <div className="card">
-              <div className="card-block">
-                <p className="card-text">
-                  With supporting text below as a natural lead-in to additional content.
-                </p>
-              </div>
-              <div className="card-footer">
-                <a href="/profile/author" className="comment-author">
-                  <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-                </a>
-                &nbsp;
-                <a href="/profile/jacob-schmidt" className="comment-author">Jacob Schmidt</a>
-                <span className="date-posted">Dec 29th</span>
-              </div>
-            </div>
-
-            <div className="card">
-              <div className="card-block">
-                <p className="card-text">
-                  With supporting text below as a natural lead-in to additional content.
-                </p>
-              </div>
-              <div className="card-footer">
-                <a href="/profile/author" className="comment-author">
-                  <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-                </a>
-                &nbsp;
-                <a href="/profile/jacob-schmidt" className="comment-author">Jacob Schmidt</a>
-                <span className="date-posted">Dec 29th</span>
-                <span className="mod-options">
-                  <i className="ion-trash-a"></i>
-                </span>
-              </div>
-            </div>
+            <CommentForm addComment={handleCreateComment} slug={currentArticle.slug} />
+            <CommentsList comments={currentComments} />
           </div>
         </div>
+
       </div>
     </div>
   )

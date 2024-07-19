@@ -1,16 +1,16 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import App from "./App.tsx";
 import { Layout } from "./components/layout.tsx";
+import "./index.css";
+import { ArticlePage } from "./pages/article.tsx";
 import { Home } from "./pages/home.tsx";
 import { Login } from "./pages/login.tsx";
+import { Profile } from "./pages/profile.tsx";
 import { Register } from "./pages/register.tsx";
 import { Settings } from "./pages/settings.tsx";
-import { Profile } from "./pages/profile.tsx";
-import { Article } from "./pages/article.tsx";
 
 const queryClient = new QueryClient();
 
@@ -45,7 +45,7 @@ const routes = createBrowserRouter([
           },
           {
             path: "article/:slug",
-            element: <Article />
+            element: <ArticlePage />
           }
 
         ]

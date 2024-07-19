@@ -1,16 +1,24 @@
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { favoriteArticle, unfavoriteArticle } from "../services/article.service";
+import { followProfile, unfollowProfile } from "../services/user.service";
 import { Article } from "../shared/data-access/api/models/article";
 import { User } from "../shared/data-access/api/models/user";
 import { useAuthStore } from "../shared/data-access/auth.store";
-import { followProfile, unfollowProfile } from "../services/user.service";
-import { favoriteArticle, unfavoriteArticle } from "../services/article.service";
 
 interface ArticleActionProps {
   article: Article;
+  toggleFavorite: (article: Article) => void;
+  toggleFollow: (profile: User) => void;
 }
-const ArticleOwnerActions = () => {
 
+interface ArticleUserActionsProps {
+  article: Article;
+  toggleFavorite: (article: Article) => void;
+  toggleFollow: (profile: User) => void;
+}
+
+
+const ArticleOwnerActions = () => {
   return (
     <>
       <button className="btn btn-sm btn-outline-secondary">
@@ -20,66 +28,68 @@ const ArticleOwnerActions = () => {
         <i className="ion-trash-a"></i> Delete Article
       </button>
     </>
-
   )
 }
 
-interface ArticleUserActionsProps {
-  article: Article
-}
 
-const ArticleUserActions = ({ article }: ArticleUserActionsProps) => {
-  const [currentAuthor, setCurrentAuthor] = useState<User>(article.author);
-  const [currentArticle, setCurrentArticle] = useState<Article>(article);
+const ArticleUserActions = ({ article, toggleFollow, toggleFavorite }: ArticleUserActionsProps) => {
+  const author = article.author
 
   const handleOnSuccessFollow = (data: { profile: User }) => {
-    console.log(data)
-    setCurrentAuthor({
-      ...currentAuthor,
-      following: data.profile.following
-    })
+    toggleFollow(data.profile)
   }
 
   const handleOnSuccessFavorite = (data: { article: Article }) => {
-    console.log(data)
-    setCurrentArticle({
-      ...currentArticle,
-      favoritesCount: data.article.favoritesCount,
-      favorited: data.article.favorited
-    })
+    toggleFavorite(data.article)
   }
-  const { mutate: handleUnfollowAuthor } = useMutation({ mutationKey: ["unfollow_author", currentAuthor.username], mutationFn: () => unfollowProfile(currentAuthor.username), onSuccess: handleOnSuccessFollow })
-  const { mutate: handleFollowAuthor } = useMutation({ mutationKey: ["follow_author", currentAuthor.username], mutationFn: () => followProfile(currentAuthor.username), onSuccess: handleOnSuccessFollow })
-  const { mutate: handleFavoriteArticle } = useMutation({ mutationKey: ["favorite_article", currentArticle.slug], mutationFn: () => favoriteArticle(currentArticle.slug), onSuccess: handleOnSuccessFavorite })
-  const { mutate: handleUnfavoriteArticle } = useMutation({ mutationKey: ["unfavorite_article", currentArticle.slug], mutationFn: () => unfavoriteArticle(currentArticle.slug), onSuccess: handleOnSuccessFavorite })
 
+  const { mutate: handleUnfollowAuthor } = useMutation({
+    mutationKey: ["unfollow_author", author.username],
+    mutationFn: () => unfollowProfile(author.username),
+    onSuccess: handleOnSuccessFollow
+  })
 
+  const { mutate: handleFollowAuthor } = useMutation({
+    mutationKey: ["follow_author", author.username],
+    mutationFn: () => followProfile(author.username),
+    onSuccess: handleOnSuccessFollow
+  })
+  const { mutate: handleFavoriteArticle } = useMutation({
+    mutationKey: ["favorite_article", article.slug],
+    mutationFn: () => favoriteArticle(article.slug),
+    onSuccess: handleOnSuccessFavorite
+  })
+  const { mutate: handleUnfavoriteArticle } = useMutation({
+    mutationKey: ["unfavorite_article", article.slug],
+    mutationFn: () => unfavoriteArticle(article.slug),
+    onSuccess: handleOnSuccessFavorite
+  })
 
   return (
     <>
       {
-        currentAuthor.following ?
+        author.following ?
           <button className="btn btn-sm btn-secondary" onClick={() => handleUnfollowAuthor()}>
             <i className="ion-minus-round"></i>
-            &nbsp; Unfollow {currentAuthor.username}
+            &nbsp; Unfollow {author.username}
           </button>
           :
           <button className="btn btn-sm btn-outline-secondary" onClick={() => handleFollowAuthor()}>
             <i className="ion-plus-round"></i>
-            &nbsp; Follow Eric Simons
+            &nbsp; Follow {author.username}
           </button>
       }
       &nbsp; &nbsp;
       {
-        currentArticle.favorited ?
+        article.favorited ?
           <button className="btn btn-sm btn-primary" onClick={() => handleUnfavoriteArticle()}>
             <i className="ion-heart"></i>
-            &nbsp; Unfavorite Post <span className="counter">({currentArticle.favoritesCount})</span>
+            &nbsp; Unfavorite Post <span className="counter">({article.favoritesCount})</span>
           </button>
           :
           <button className="btn btn-sm btn-outline-primary" onClick={() => handleFavoriteArticle()}>
             <i className="ion-heart"></i>
-            &nbsp; Favorite Post <span className="counter">({currentArticle.favoritesCount})</span>
+            &nbsp; Favorite Post <span className="counter">({article.favoritesCount})</span>
           </button>
       }
     </>
@@ -87,9 +97,9 @@ const ArticleUserActions = ({ article }: ArticleUserActionsProps) => {
 }
 
 
-export const ArticleActions = ({ article }: ArticleActionProps) => {
+export const ArticleActions = ({ article, toggleFollow, toggleFavorite }: ArticleActionProps) => {
   const { user } = useAuthStore()
   const isOwner = article.author.username === user?.username
 
-  return isOwner ? <ArticleOwnerActions /> : <ArticleUserActions article={article} />
+  return isOwner ? <ArticleOwnerActions /> : <ArticleUserActions article={article} toggleFollow={toggleFollow} toggleFavorite={toggleFavorite} />
 }

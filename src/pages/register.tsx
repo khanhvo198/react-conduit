@@ -1,13 +1,12 @@
 import { useMutation } from "@tanstack/react-query"
 import { AxiosError } from "axios"
 import { Field, Form, Formik } from "formik"
+import { NavLink, useNavigate } from "react-router-dom"
 import { toFormikValidationSchema } from "zod-formik-adapter"
 import { register } from "../services/auth.service"
+import { useAuthStore } from "../shared/data-access/auth.store"
 import { RegisterValidationSchema } from "../shared/data-access/zod-schema"
 import { ErrorList } from "../shared/ui/ErrorList"
-import { NavLink, useNavigate } from "react-router-dom"
-import { CONDUIT_TOKEN, CONDUIT_USER } from "../shared/constants"
-import { useAuthStore } from "../shared/data-access/auth.store"
 
 const initialValues = {
   username: "",
