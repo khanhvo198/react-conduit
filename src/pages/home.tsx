@@ -1,12 +1,13 @@
 import { useQuery } from "@tanstack/react-query"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { ArticlesList } from "../components/articles-list"
 import { Banner } from "../components/banner"
 import { FeedToggle } from "../components/feed-toggle"
 import { Pagination } from "../components/pagination"
 import { PopularTag } from "../components/popular-tags"
 import { getArticles, getFeeds } from "../services/article.service"
-import { YOUR_FEED } from "../shared/constants"
+import { GLOBAL_FEED, YOUR_FEED } from "../shared/constants"
+import { useAuthStore } from "../shared/data-access/auth.store"
 
 
 
@@ -25,15 +26,15 @@ const getQueryOptions = (tab: string, currentPage: number) => {
   }
 }
 
-const tabsList = [
-  "Your Feed",
-  "Global Feed"
-]
+let tabsList: string[] = []
 
 export const Home = () => {
+  const { isAuthenticated } = useAuthStore()
+
+
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [total, setTotal] = useState<number>(0)
-  const [tab, setTab] = useState<string>(YOUR_FEED)
+  const [tab, setTab] = useState<string>(isAuthenticated ? YOUR_FEED : GLOBAL_FEED)
 
   const queryOptions = getQueryOptions(tab, currentPage)
   const { isPending, data, isSuccess } = useQuery(queryOptions)
@@ -43,6 +44,16 @@ export const Home = () => {
     const totalPage = Math.ceil(totalResults / 10)
     setTotal(totalPage)
   }, [totalResults])
+
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      tabsList = ["Your Feed", "Global Feed"]
+    } else {
+
+      tabsList = ["Global Feed"]
+    }
+  }, [])
 
   const handleOnPageChange = (page: number) => {
     setCurrentPage(page)

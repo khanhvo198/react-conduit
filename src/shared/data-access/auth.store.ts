@@ -10,7 +10,8 @@ interface AuthState {
 }
 
 const token = localStorage.getItem(CONDUIT_TOKEN)
-const user = JSON.parse(localStorage.getItem(CONDUIT_USER) || "{}")
+const userFromLocalStorage = localStorage.getItem(CONDUIT_USER)
+const user = userFromLocalStorage ? JSON.parse(userFromLocalStorage) : undefined
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: user,
