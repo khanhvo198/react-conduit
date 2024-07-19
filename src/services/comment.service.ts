@@ -11,3 +11,9 @@ export const createComment = async (slug: string, comment: { comment: CommentDTO
   const response = await conduitApi.post(`/articles/${slug}/comments`, comment)
   return response.data
 }
+
+export const deleteComment = async (slug: string, id: number): Promise<{ comment: Comment }> => {
+  const response = await conduitApi.delete(`/articles/${slug}/comments/${id}`)
+  return response.data
+}
+

@@ -24,6 +24,13 @@ export const CommentForm = ({ addComment, slug }: CommentFormProps) => {
     }
   })
 
+  console.log(user)
+  if (!user) {
+    return (
+
+      <p><a href="/login">Sign in</a> or <a href="/register">sign up</a> to add comments on this article</p>
+    )
+  }
   return (
     <Formik
       initialValues={initialValues}

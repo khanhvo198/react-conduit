@@ -1,12 +1,20 @@
-import { Comment } from "../shared/data-access/api/models/comment"
-import { useAuthStore } from "../shared/data-access/auth.store"
+import { useMutation } from "@tanstack/react-query";
+import { deleteComment } from "../services/comment.service";
+import { Comment } from "../shared/data-access/api/models/comment";
 
 interface CommentListProps {
-  comments: Comment[]
+  slug: string;
+  comments: Comment[];
+  removeComment: (id: number) => void
 }
 
 
-export const CommentsList = ({ comments }: CommentListProps) => {
+export const CommentsList = ({ slug, comments, removeComment }: CommentListProps) => {
+
+  const mutation = useMutation({
+    mutationKey: ["remove_comment", slug], mutationFn: (id: number) => deleteComment(slug, id)
+  })
+
   return (
     comments.map((comment) => (
       <div className="card" key={comment.id}>
@@ -19,9 +27,16 @@ export const CommentsList = ({ comments }: CommentListProps) => {
           <a href={`/profile/${comment.author.username}`} className="comment-author">
             <img src={comment.author.image} className="comment-author-img" />
           </a>
-          &nbsp;
+          &nbsp; &nbsp;
           <a href={`/profile/${comment.author.username}`} className="comment-author">{comment.author.username}</a>
           <span className="date-posted">{comment.createdAt}</span>
+          <span style={{ float: "right", color: "#333", fontSize: "1rem" }}>
+            <i className="ion-trash-a" style={{ opacity: "0.6", cursor: "pointer" }} onClick={() => mutation.mutate(comment.id, {
+              onSuccess: () => {
+                removeComment(comment.id)
+              }
+            })} />
+          </span>
         </div>
       </div>
     ))

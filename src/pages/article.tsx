@@ -11,6 +11,7 @@ import { CommentsList } from "../components/comments-list"
 import { getComments } from "../services/comment.service"
 import { Comment } from "../shared/data-access/api/models/comment"
 import { CommentForm } from "../components/comment-form"
+import { useAuthStore } from "../shared/data-access/auth.store"
 
 
 const initArticle = {
@@ -40,6 +41,7 @@ export const ArticlePage = () => {
   const { slug } = useParams()
   const [currentArticle, setCurrentArticle] = useState<Article>(initArticle)
   const [currentComments, setCurrentComments] = useState<Comment[]>([])
+  const { user } = useAuthStore()
   const { isPending: isPendingArticle, isSuccess: isSuccessArticle, data: dataArticle } = useQuery({
     queryKey: ["article"], queryFn: () => getArticle(slug!)
   })
@@ -82,6 +84,11 @@ export const ArticlePage = () => {
     setCurrentComments([...currentComments])
   }
 
+  const handleRemoveComment = (id: number) => {
+    const filterComments = currentComments.filter((comment) => comment.id !== id)
+    setCurrentComments([...filterComments])
+  }
+
   if (isPendingArticle) return <div>Loading...</div>
 
 
@@ -118,7 +125,7 @@ export const ArticlePage = () => {
         <div className="row">
           <div className="col-xs-12 col-md-8 offset-md-2">
             <CommentForm addComment={handleCreateComment} slug={currentArticle.slug} />
-            <CommentsList comments={currentComments} />
+            <CommentsList slug={currentArticle.slug} comments={currentComments} removeComment={handleRemoveComment} />
           </div>
         </div>
 
