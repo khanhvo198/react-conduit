@@ -11,6 +11,7 @@ import { Login } from "./pages/login.tsx";
 import { Profile } from "./pages/profile.tsx";
 import { Register } from "./pages/register.tsx";
 import { Settings } from "./pages/settings.tsx";
+import { ArticleCreateForm } from "./components/article-create-form.tsx";
 
 const queryClient = new QueryClient();
 
@@ -46,7 +47,12 @@ const routes = createBrowserRouter([
           {
             path: "article/:slug",
             element: <ArticlePage />
+          },
+          {
+            path: "/editor",
+            element: <ArticleCreateForm />
           }
+
 
         ]
       }

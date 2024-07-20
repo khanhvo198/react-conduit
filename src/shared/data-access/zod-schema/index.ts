@@ -21,3 +21,9 @@ export const UpdateUserValidationSchema = z.object({
   password: z.string().min(8),
 }).partial()
   .refine((form) => Object.values(form).some(Boolean))
+
+export const ArticleValidationSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  body: z.string()
+})
