@@ -3,14 +3,14 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { ArticleActions } from "../components/article-action"
 import { ArticleMeta } from "../components/article-meta"
+import { CommentForm } from "../components/comment-form"
+import { CommentsList } from "../components/comments-list"
 import { TagList } from "../components/tag-list"
 import { getArticle } from "../services/article.service"
-import { Article } from "../shared/data-access/api/models/article"
-import { User } from "../shared/data-access/api/models/user"
-import { CommentsList } from "../components/comments-list"
 import { getComments } from "../services/comment.service"
+import { Article } from "../shared/data-access/api/models/article"
 import { Comment } from "../shared/data-access/api/models/comment"
-import { CommentForm } from "../components/comment-form"
+import { User } from "../shared/data-access/api/models/user"
 import { useAuthStore } from "../shared/data-access/auth.store"
 
 
@@ -41,9 +41,8 @@ export const ArticlePage = () => {
   const { slug } = useParams()
   const [currentArticle, setCurrentArticle] = useState<Article>(initArticle)
   const [currentComments, setCurrentComments] = useState<Comment[]>([])
-  const { user } = useAuthStore()
   const { isPending: isPendingArticle, isSuccess: isSuccessArticle, data: dataArticle } = useQuery({
-    queryKey: ["article"], queryFn: () => getArticle(slug!)
+    queryKey: ["article"], queryFn: () => getArticle(slug!), gcTime: 0
   })
 
   const { isPending: isPendingComments, isSuccess: isSuccessComments, data: dataComments } = useQuery({
