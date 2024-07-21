@@ -1,5 +1,12 @@
-import { Field, Form, Formik } from "formik"
-import { ChangeEvent, InputHTMLAttributes, KeyboardEvent, KeyboardEventHandler } from "react"
+import { Field, Form, Formik, useFormik, useFormikContext } from "formik"
+import { KeyboardEvent, useRef, useState } from "react"
+import { ArticleValidationSchema } from "../shared/data-access/zod-schema"
+import { toFormikValidationSchema } from "zod-formik-adapter"
+import { useMutation } from "@tanstack/react-query"
+import { createArticle } from "../services/article.service"
+import { ArticleDTO } from "../shared/data-access/api/models/article"
+import { AxiosError } from "axios"
+import { useNavigate } from "react-router-dom"
 
 const initialValues = {
   title: "",
@@ -9,67 +16,114 @@ const initialValues = {
 }
 
 export const ArticleCreateForm = () => {
+  const navigate = useNavigate()
+  const [tagList, setTagList] = useState<string[]>([])
+  const [currentTag, setCurrentTag] = useState<string>("")
+  const [errors, setErrors] = useState<string[]>([])
 
-  const handleAddTag = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: toFormikValidationSchema(ArticleValidationSchema),
+    onSubmit: () => { }
+  })
 
+  const { mutate } = useMutation({
+    mutationKey: ["create_article"],
+    mutationFn: (article: ArticleDTO) => createArticle({ article }),
+    onSuccess: (data) => {
+      navigate(`/article/${data.article.slug}`)
+    },
+    onError: (error: AxiosError) => {
+      const errors = (error.response?.data as any).errors as Record<string, string[]>
+      const currentErrors = []
+      for (const [field, message] of Object.entries(errors)) {
+        currentErrors.push(field + " " + message.join(""))
+      }
+      setErrors(currentErrors)
+    }
+  })
+
+  const handleOnSubmit = () => {
+    if (!formik.isValid) {
+      const currentErrors = []
+      for (const [error, value] of Object.entries(formik.errors)) {
+        const message = typeof value === "string" ? value : value.join("")
+        currentErrors.push(`That ${error} is ${message.toLowerCase()}`)
+      }
+      setErrors(currentErrors)
+    } else {
+      setErrors([])
+      mutate(formik.values)
     }
   }
 
-  const handleOnSubmit = () => {
+  const handleAddTag = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const tag = (e.target as HTMLInputElement).value
+      tagList.push(tag)
+      setTagList([...tagList])
+      formik.setFieldValue("tagList", [...tagList])
+      setCurrentTag("")
+    }
+  }
 
+  const handleOnRemoveTag = (tag: string) => {
+    const newTag = [...tagList.filter(currentTag => currentTag !== tag)]
+    setTagList(newTag)
+    formik.setFieldValue("tagList", newTag)
   }
 
   return (
-    <div className="editor-page">
+    <div className="editor-page" >
       <div className="container page">
         <div className="row">
           <div className="col-md-10 offset-md-1 col-xs-12">
             <ul className="error-messages">
-              <li>That title is required</li>
+              {
+                errors.map((error, index) => <li key={index}>{error}</li>)
+              }
             </ul>
 
-            <Formik
-              initialValues={initialValues}
-              onSubmit={handleOnSubmit}
-            >
-
-
-              <Form>
-                <fieldset>
-                  <fieldset className="form-group">
-                    <Field name="title" type="text" className="form-control form-control-lg" placeholder="Article Title" />
-                  </fieldset>
-                  <fieldset className="form-group">
-                    <Field name="description" type="text" className="form-control" placeholder="What's this article about?" />
-                  </fieldset>
-                  <fieldset className="form-group">
-                    <Field
-                      name="body"
-                      as="textarea"
-                      className="form-control"
-                      rows={8}
-                      placeholder="Write your article (in markdown)"
-                    />
-                  </fieldset>
-                  <fieldset className="form-group">
-                    <Field name="tagList" type="text" className="form-control" placeholder="Enter tags"
-                      onKeyUp={handleAddTag}
-                    />
-                    <div className="tag-list">
-                      <span className="tag-default tag-pill"> <i className="ion-close-round"></i> tag </span>
-                    </div>
-                  </fieldset>
-                  <button className="btn btn-lg pull-xs-right btn-primary" type="submit">
-                    Publish Article
-                  </button>
+            <form>
+              <fieldset>
+                <fieldset className="form-group">
+                  <input name="title" type="text" className="form-control form-control-lg" placeholder="Article Title" onChange={formik.handleChange} value={formik.values.title} />
                 </fieldset>
-              </Form>
-            </Formik>
+                <fieldset className="form-group">
+                  <input name="description" type="text" className="form-control" placeholder="What's this article about?" onChange={formik.handleChange} value={formik.values.description} />
+                </fieldset>
+                <fieldset className="form-group">
+                  <textarea
+                    name="body"
+                    className="form-control"
+                    rows={8}
+                    placeholder="Write your article (in markdown)"
+                    onChange={formik.handleChange}
+                    value={formik.values.body}
+                  />
+                </fieldset>
+                <fieldset className="form-group">
+                  <input type="text" className="form-control" placeholder="Enter tags" value={currentTag}
+                    onChange={(e) => setCurrentTag(e.target.value)}
+                    onKeyUp={handleAddTag}
+                  />
+                  <div className="tag-list">
+                    {
+                      tagList.map((tag, index) => (
+                        <span key={tag + index} className="tag-default tag-pill"> <i className="ion-close-round" onClick={() => handleOnRemoveTag(tag)}></i> {tag}</span>
+                      ))
+                    }
+                  </div>
+                </fieldset>
+                <button className="btn btn-lg pull-xs-right btn-primary" type="button" onClick={handleOnSubmit}>
+                  Publish Article
+                </button>
+              </fieldset>
+            </form>
 
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }

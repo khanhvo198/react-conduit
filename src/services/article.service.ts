@@ -1,5 +1,5 @@
 import { conduitApi } from "../shared/data-access/api";
-import { Article, ArticlesDTO } from "../shared/data-access/api/models/article";
+import { Article, ArticleDTO, ArticlesDTO } from "../shared/data-access/api/models/article";
 
 interface paramsArticle {
   offset?: number;
@@ -50,5 +50,11 @@ export const unfavoriteArticle = async (slug: string): Promise<{ article: Articl
 
 export const getArticle = async (slug: string): Promise<{ article: Article }> => {
   const response = await conduitApi.get(`articles/${slug}`)
+  return response.data
+}
+
+
+export const createArticle = async (article: { article: ArticleDTO }): Promise<{ article: Article }> => {
+  const response = await conduitApi.post("articles", article)
   return response.data
 }

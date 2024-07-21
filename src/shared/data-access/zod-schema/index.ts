@@ -25,5 +25,6 @@ export const UpdateUserValidationSchema = z.object({
 export const ArticleValidationSchema = z.object({
   title: z.string(),
   description: z.string(),
-  body: z.string()
+  body: z.string(),
+  tagList: z.string().optional().array()
 })
