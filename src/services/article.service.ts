@@ -58,3 +58,13 @@ export const createArticle = async (article: { article: ArticleDTO }): Promise<{
   const response = await conduitApi.post("articles", article)
   return response.data
 }
+
+
+export const deleteArticle = async (slug: string): Promise<void> => {
+  await conduitApi.delete(`/articles/${slug}`)
+}
+
+export const updateArticle = async (article: { article: ArticleDTO }, slug: string): Promise<{ article: Article }> => {
+  const response = await conduitApi.put(`articles/${slug}`, article)
+  return response.data
+}
