@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query"
 import { Article } from "../shared/data-access/api/models/article"
 import { TagList } from "./tag-list"
 import { favoriteArticle, unfavoriteArticle } from "../services/article.service"
+import { Link } from "react-router-dom"
 
 interface ArticleProps {
   article: Article
@@ -33,7 +34,7 @@ export const ArticlePreview = ({ article }: ArticleProps) => {
       <div className="article-meta">
         <a href={article.author.username}><img src={article.author.image} /></a>
         <div className="info">
-          <a href={`/profile/${article.author.username}`} className="author">{article.author.username}</a>
+          <Link reloadDocument to={`/profile/${article.author.username}`} className="author">{article.author.username}</Link>
           <span className="date">{article.createdAt}</span>
         </div>
         <button onClick={handleOnClick} className={`btn ${article.favorited ? "btn-primary" : "btn-outline-primary"} btn-sm pull-xs-right`}>

@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { deleteComment } from "../services/comment.service";
 import { Comment } from "../shared/data-access/api/models/comment";
+import { Link } from "react-router-dom";
 
 interface CommentListProps {
   slug: string;
@@ -28,7 +29,7 @@ export const CommentsList = ({ slug, comments, removeComment }: CommentListProps
             <img src={comment.author.image} className="comment-author-img" />
           </a>
           &nbsp; &nbsp;
-          <a href={`/profile/${comment.author.username}`} className="comment-author">{comment.author.username}</a>
+          <Link reloadDocument to={`/profile/${comment.author.username}`} className="comment-author">{comment.author.username}</Link>
           <span className="date-posted">{comment.createdAt}</span>
           <span style={{ float: "right", color: "#333", fontSize: "1rem" }}>
             <i className="ion-trash-a" style={{ opacity: "0.6", cursor: "pointer" }} onClick={() => mutation.mutate(comment.id, {

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { Article } from "../shared/data-access/api/models/article"
 
 interface ArticleMetaProps {
@@ -11,7 +12,7 @@ export const ArticleMeta = ({ article }: ArticleMetaProps) => {
     <>
       <a href={`/profile/${author.username}`}><img src={author.image} /></a>
       <div className="info">
-        <a href={`/profile/${author.username}`} className="author">{author.username}</a>
+        <Link reloadDocument to={`/profile/${author.username}`} className="author">{author.username}</Link>
         <span className="date">{article.createdAt}</span>
       </div>
     </>

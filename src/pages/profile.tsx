@@ -15,13 +15,15 @@ const getQueryOptions = (tab: string, currentPage: number, username: string) => 
   const offset = (currentPage - 1) * 10
   if (tab === `${username}'s Articles`) {
     return {
-      queryKey: [`${username}'s Articles`, tab, currentPage, username],
-      queryFn: () => getArticles({ offset, author: username })
+      queryKey: [`${username}'s_articles`, tab, currentPage, username],
+      queryFn: () => getArticles({ offset, author: username }),
+      gcTime: 0
     }
   } else {
     return {
       queryKey: ["favorited_articles", tab, currentPage, username],
-      queryFn: () => getArticles({ offset, favorited: username })
+      queryFn: () => getArticles({ offset, favorited: username }),
+      gcTime: 0
     }
   }
 }
@@ -34,10 +36,16 @@ export const Profile = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1)
 
-  const { isPending: isPendingProfile, data: dataProfile } = useQuery({ queryKey: ["profile"], queryFn: () => getProfile(username!) })
-  const { isPending: isPendingArticles, data: dataArticles, isSuccess } = useQuery(getQueryOptions(tab, currentPage, username!))
+  console.log(tab)
+
+  const { isPending: isPendingProfile, data: dataProfile } = useQuery({
+    queryKey: ["profile", username], queryFn: () => getProfile(username!), gcTime: 0
+  })
+  const { isPending: isPendingArticles, data: dataArticles, isSuccess: isSuccessArticles } = useQuery(getQueryOptions(tab, currentPage, username!))
 
   const isPending = isPendingProfile && isPendingArticles
+
+
 
   const isOwner = dataProfile?.profile.username === user?.username
 
@@ -77,10 +85,10 @@ export const Profile = () => {
               isPendingArticles && <div className="article-preview">Loading...</div>
             }
             {
-              isSuccess && dataArticles.articles.length === 0 && <div className="article-preview"> No articles here... yet</div>
+              isSuccessArticles && dataArticles.articles.length === 0 && <div className="article-preview"> No articles here... yet</div>
             }
             {
-              isSuccess && <ArticlesList articles={dataArticles.articles} />
+              isSuccessArticles && <ArticlesList articles={dataArticles.articles} />
             }
             <Pagination totalPage={total} currentPage={currentPage} onPageChange={handleOnPageChange} />
           </div>

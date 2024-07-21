@@ -1,9 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { favoriteArticle, unfavoriteArticle } from "../services/article.service";
+import { deleteArticle, favoriteArticle, unfavoriteArticle } from "../services/article.service";
 import { followProfile, unfollowProfile } from "../services/user.service";
 import { Article } from "../shared/data-access/api/models/article";
 import { User } from "../shared/data-access/api/models/user";
 import { useAuthStore } from "../shared/data-access/auth.store";
+import { useNavigate } from "react-router-dom";
 
 interface ArticleActionProps {
   article: Article;
@@ -18,15 +19,27 @@ interface ArticleUserActionsProps {
 }
 
 
-const ArticleOwnerActions = () => {
+const ArticleOwnerActions = ({ article }: { article: Article }) => {
+  const navigate = useNavigate()
+  const { mutate: removeArticle } = useMutation({
+    mutationKey: ["delete_article"], mutationFn: deleteArticle, onSuccess: () => {
+      navigate("/")
+    }
+  })
+
+  const handleOnClickEditArticle = () => {
+    navigate(`/editor/${article.slug}`)
+  }
+
   return (
     <>
-      <button className="btn btn-sm btn-outline-secondary">
+      <button className="btn btn-sm btn-outline-secondary" onClick={handleOnClickEditArticle}>
         <i className="ion-edit"></i> Edit Article
       </button>
-      <button className="btn btn-sm btn-outline-danger">
+      &nbsp;
+      <button className="btn btn-sm btn-outline-danger" onClick={() => removeArticle(article.slug)}>
         <i className="ion-trash-a"></i> Delete Article
-      </button>
+      </button >
     </>
   )
 }
@@ -101,5 +114,5 @@ export const ArticleActions = ({ article, toggleFollow, toggleFavorite }: Articl
   const { user } = useAuthStore()
   const isOwner = article.author.username === user?.username
 
-  return isOwner ? <ArticleOwnerActions /> : <ArticleUserActions article={article} toggleFollow={toggleFollow} toggleFavorite={toggleFavorite} />
+  return isOwner ? <ArticleOwnerActions article={article} /> : <ArticleUserActions article={article} toggleFollow={toggleFollow} toggleFavorite={toggleFavorite} />
 }
