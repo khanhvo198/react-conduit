@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React from "react";
+import React, { Children } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.tsx";
@@ -13,6 +13,7 @@ import { Login } from "./pages/login.tsx";
 import { Profile } from "./pages/profile.tsx";
 import { Register } from "./pages/register.tsx";
 import { Settings } from "./pages/settings.tsx";
+import ProtectedRoute from "./utils/protected-route.tsx";
 
 const queryClient = new QueryClient();
 
@@ -38,10 +39,6 @@ const routes = createBrowserRouter([
             element: <Register />
           },
           {
-            path: "settings",
-            element: <Settings />
-          },
-          {
             path: "profile/:username",
             element: <Profile />
           },
@@ -50,12 +47,16 @@ const routes = createBrowserRouter([
             element: <ArticlePage />
           },
           {
+            path: "settings",
+            element: <ProtectedRoute children={<Settings />} />,
+          },
+          {
             path: "/editor",
-            element: <ArticleCreateForm />
+            element: <ProtectedRoute children={<ArticleCreateForm />} />
           },
           {
             path: "/editor/:slug",
-            element: <ArticleUpdateForm />
+            element: <ProtectedRoute children={<ArticleUpdateForm />} />
           }
         ]
       }
