@@ -11,6 +11,8 @@ import { getComments } from "../services/comment.service"
 import { Article } from "../shared/data-access/api/models/article"
 import { Comment } from "../shared/data-access/api/models/comment"
 import { User } from "../shared/data-access/api/models/user"
+import { marked } from "marked"
+import Markdown from "marked-react"
 
 
 const initArticle = {
@@ -105,9 +107,7 @@ export const ArticlePage = () => {
       <div className="container page">
         <div className="row article-content">
           <div className="col-md-12">
-            <p>
-              {currentArticle.body}
-            </p>
+            <Markdown value={currentArticle.body} />
             <TagList tagList={currentArticle.tagList} />
           </div>
         </div>
