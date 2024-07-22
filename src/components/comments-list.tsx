@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { deleteComment } from "../services/comment.service";
 import { Comment } from "../shared/data-access/api/models/comment";
+import dayjs from "dayjs";
 
 interface CommentListProps {
   slug: string;
@@ -30,7 +31,7 @@ export const CommentsList = ({ slug, comments, removeComment }: CommentListProps
           </a>
           &nbsp; &nbsp;
           <Link reloadDocument to={`/profile/${comment.author.username}`} className="comment-author">{comment.author.username}</Link>
-          <span className="date-posted">{comment.createdAt}</span>
+          <span className="date-posted">{dayjs(comment.createdAt).format("MMMM D, YYYY")}</span>
           <span style={{ float: "right", color: "#333", fontSize: "1rem" }}>
             <i className="ion-trash-a" style={{ opacity: "0.6", cursor: "pointer" }} onClick={() => mutation.mutate(comment.id, {
               onSuccess: () => {
