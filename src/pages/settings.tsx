@@ -1,12 +1,10 @@
-import { Field, Formik, Form } from "formik"
-import { toFormikValidationSchema } from "zod-formik-adapter"
-import { UpdateUserValidationSchema } from "../shared/data-access/zod-schema"
 import { useMutation } from "@tanstack/react-query"
-import { updateUser } from "../services/user.service"
 import { AxiosError } from "axios"
-import { ErrorList } from "../shared/ui/ErrorList"
+import { Field, Form, Formik } from "formik"
 import { useNavigate } from "react-router-dom"
+import { updateUser } from "../services/user.service"
 import { useAuthStore } from "../shared/data-access/auth.store"
+import { ErrorList } from "../shared/ui/ErrorList"
 
 export const Settings = () => {
   const { user, setUser, setAuthState } = useAuthStore();

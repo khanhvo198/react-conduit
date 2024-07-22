@@ -1,8 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import { Profile, User } from "../shared/data-access/api/models/user"
 import { useMutation } from "@tanstack/react-query";
-import { followProfile, unfollowProfile } from "../services/user.service";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { followProfile, unfollowProfile } from "../services/user.service";
+import { Profile } from "../shared/data-access/api/models/user";
 
 interface ProfilePreviewProps {
   profile: Profile;

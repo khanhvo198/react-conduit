@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { deleteArticle, favoriteArticle, unfavoriteArticle } from "../services/article.service";
 import { followProfile, unfollowProfile } from "../services/user.service";
 import { Article } from "../shared/data-access/api/models/article";
 import { User } from "../shared/data-access/api/models/user";
 import { useAuthStore } from "../shared/data-access/auth.store";
-import { useNavigate } from "react-router-dom";
 
 interface ArticleActionProps {
   article: Article;

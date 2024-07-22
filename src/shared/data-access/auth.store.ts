@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { User } from "./api/models/user"
 import { CONDUIT_TOKEN, CONDUIT_USER } from "../constants";
+import { User } from "./api/models/user";
 
 interface AuthState {
   user: User | undefined;

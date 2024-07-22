@@ -1,7 +1,7 @@
-import { useParams } from "react-router-dom"
-import { ArticleForm } from "./article-form"
 import { useQuery } from "@tanstack/react-query"
+import { useParams } from "react-router-dom"
 import { getArticle, updateArticle } from "../services/article.service"
+import { ArticleForm } from "./article-form"
 
 export const ArticleUpdateForm = () => {
   const { slug } = useParams()

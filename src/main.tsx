@@ -3,6 +3,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.tsx";
+import { ArticleCreateForm } from "./components/article-create-form.tsx";
+import { ArticleUpdateForm } from "./components/article-update.form.tsx";
 import { Layout } from "./components/layout.tsx";
 import "./index.css";
 import { ArticlePage } from "./pages/article.tsx";
@@ -11,8 +13,6 @@ import { Login } from "./pages/login.tsx";
 import { Profile } from "./pages/profile.tsx";
 import { Register } from "./pages/register.tsx";
 import { Settings } from "./pages/settings.tsx";
-import { ArticleCreateForm } from "./components/article-create-form.tsx";
-import { ArticleUpdateForm } from "./components/article-update.form.tsx";
 
 const queryClient = new QueryClient();
 

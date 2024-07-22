@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { User } from "./user";
-import { ArticleCreateForm } from "../../../../components/article-create-form";
 import { ArticleValidationSchema } from "../../zod-schema";
+import { User } from "./user";
 
 export interface Article {
   slug: string;

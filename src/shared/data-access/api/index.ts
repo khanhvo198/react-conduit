@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { BASE_URL, CONDUIT_TOKEN } from "../../constants";
-import { useAuthStore } from "../auth.store";
 
 
 export const conduitApi = axios.create();

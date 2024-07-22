@@ -1,4 +1,4 @@
-import { conduitApi } from "../shared/data-access/api"
+import { conduitApi } from "../shared/data-access/api";
 import { Profile, UpdateUserDTO, User } from "../shared/data-access/api/models/user";
 
 export const getUser = async (): Promise<{ user: User }> => {

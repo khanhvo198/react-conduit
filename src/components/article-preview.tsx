@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query"
+import { Link } from "react-router-dom"
+import { favoriteArticle, unfavoriteArticle } from "../services/article.service"
 import { Article } from "../shared/data-access/api/models/article"
 import { TagList } from "./tag-list"
-import { favoriteArticle, unfavoriteArticle } from "../services/article.service"
-import { Link } from "react-router-dom"
 
 interface ArticleProps {
   article: Article

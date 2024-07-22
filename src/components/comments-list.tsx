@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { deleteComment } from "../services/comment.service";
 import { Comment } from "../shared/data-access/api/models/comment";
-import { Link } from "react-router-dom";
 
 interface CommentListProps {
   slug: string;

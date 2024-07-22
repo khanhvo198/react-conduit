@@ -11,7 +11,6 @@ import { getComments } from "../services/comment.service"
 import { Article } from "../shared/data-access/api/models/article"
 import { Comment } from "../shared/data-access/api/models/comment"
 import { User } from "../shared/data-access/api/models/user"
-import { useAuthStore } from "../shared/data-access/auth.store"
 
 
 const initArticle = {

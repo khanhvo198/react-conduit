@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom"
-import { useAuthStore } from "../shared/data-access/auth.store"
 import { User } from "../shared/data-access/api/models/user"
+import { useAuthStore } from "../shared/data-access/auth.store"
 
 
 const GuestHeader = () => {
