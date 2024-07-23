@@ -4,7 +4,7 @@ import { deleteArticle, favoriteArticle, unfavoriteArticle } from "../services/a
 import { followProfile, unfollowProfile } from "../services/user.service";
 import { Article } from "../shared/data-access/api/models/article";
 import { User } from "../shared/data-access/api/models/user";
-import { useAuthStore } from "../shared/data-access/auth.store";
+import { useAuthStore } from "../shared/data-access/store/auth.store";
 
 interface ArticleActionProps {
   article: Article;

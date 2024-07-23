@@ -5,9 +5,9 @@ import { NavLink, useNavigate } from "react-router-dom"
 import { toFormikValidationSchema } from "zod-formik-adapter"
 import { login } from "../services/auth.service"
 import { User, UserLoginDTO } from "../shared/data-access/api/models/user"
-import { useAuthStore } from "../shared/data-access/auth.store"
+import { useAuthStore } from "../shared/data-access/store/auth.store"
 import { LoginValidationSchema } from "../shared/data-access/zod-schema"
-import { ErrorList } from "../shared/ui/ErrorList"
+import { ErrorList } from "../shared/ui/error-list"
 
 const initialValues: UserLoginDTO = {
   email: "",

@@ -7,7 +7,7 @@ import { Pagination } from "../components/pagination"
 import { PopularTag } from "../components/popular-tags"
 import { getArticles, getFeeds } from "../services/article.service"
 import { GLOBAL_FEED, YOUR_FEED } from "../shared/constants"
-import { useAuthStore } from "../shared/data-access/auth.store"
+import { useAuthStore } from "../shared/data-access/store/auth.store"
 
 
 

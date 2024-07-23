@@ -3,8 +3,8 @@ import { AxiosError } from "axios"
 import { Field, Form, Formik } from "formik"
 import { useNavigate } from "react-router-dom"
 import { updateUser } from "../services/user.service"
-import { useAuthStore } from "../shared/data-access/auth.store"
-import { ErrorList } from "../shared/ui/ErrorList"
+import { useAuthStore } from "../shared/data-access/store/auth.store"
+import { ErrorList } from "../shared/ui/error-list"
 
 export const Settings = () => {
   const { user, setUser, setAuthState } = useAuthStore();

@@ -4,9 +4,9 @@ import { Field, Form, Formik } from "formik"
 import { NavLink, useNavigate } from "react-router-dom"
 import { toFormikValidationSchema } from "zod-formik-adapter"
 import { register } from "../services/auth.service"
-import { useAuthStore } from "../shared/data-access/auth.store"
+import { useAuthStore } from "../shared/data-access/store/auth.store"
 import { RegisterValidationSchema } from "../shared/data-access/zod-schema"
-import { ErrorList } from "../shared/ui/ErrorList"
+import { ErrorList } from "../shared/ui/error-list"
 
 const initialValues = {
   username: "",

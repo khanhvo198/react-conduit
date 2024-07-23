@@ -7,7 +7,7 @@ import { Pagination } from "../components/pagination"
 import { ProfilePreview } from "../components/profile-preview"
 import { getArticles } from "../services/article.service"
 import { getProfile } from "../services/user.service"
-import { useAuthStore } from "../shared/data-access/auth.store"
+import { useAuthStore } from "../shared/data-access/store/auth.store"
 
 
 

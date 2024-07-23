@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
+import Markdown from "marked-react"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { ArticleActions } from "../components/article-action"
@@ -11,8 +12,6 @@ import { getComments } from "../services/comment.service"
 import { Article } from "../shared/data-access/api/models/article"
 import { Comment } from "../shared/data-access/api/models/comment"
 import { User } from "../shared/data-access/api/models/user"
-import { marked } from "marked"
-import Markdown from "marked-react"
 
 
 const initArticle = {

@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query"
 import { Field, Form, Formik } from "formik"
 import { createComment } from "../services/comment.service"
 import { Comment, CommentDTO } from "../shared/data-access/api/models/comment"
-import { useAuthStore } from "../shared/data-access/auth.store"
+import { useAuthStore } from "../shared/data-access/store/auth.store"
 
 interface CommentFormProps {
   slug: string;
