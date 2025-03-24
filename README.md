@@ -1,30 +1,34 @@
-# React + TypeScript + Vite
+✅ About the Project
+- Conduit is a front-end project for a Medium-like blogging platform. You can explore it right [there](https://realworld-docs.netlify.app/).
+- It’s built using React and connects to a REST API backend (built with Java Spring Boot).
+- The app allows users to register, log in, create and edit articles, follow other authors, and interact with content — all with a clean, responsive UI.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+✨ Features
+- User authentication (Login & Register)
 
-Currently, two official plugins are available:
+- Create, edit, delete articles
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Slug-based article detail pages
 
-## Expanding the ESLint configuration
+- Follow/unfollow authors
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Like/unlike articles
 
-- Configure the top-level `parserOptions` property like this:
+- Add/delete comments
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- Paginated article feeds (Global, Personal, Tag-based)
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- Profile pages
+
+- Responsive design
+
+📸 Key Screens
+- 🏠 Home Feed (Global & Personalized)
+
+- 📰 Article Details
+
+- ✍️ Editor (Create & Edit Articles)
+
+- 👤 Profile Page
+
+- 🔐 Login & Register
